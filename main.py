@@ -2,13 +2,15 @@ import requests
 from pydub import AudioSegment
 import os
 import base64
+from dotenv import load_dotenv
 # from bitstring import BitArray
 
+load_dotenv()
 url = "https://shazam.p.rapidapi.com/songs/detect"
 querystring = {"timezone":"America/Chicago","locale":"en-US"}
 
 headers = {
-	"x-rapidapi-key": "20255aac57msh804c236292b3ec2p12abd6jsna3d7d7386a44",
+	"x-rapidapi-key": os.getenv("RAPIDAPI_KEY"),
 	"x-rapidapi-host": "shazam.p.rapidapi.com",
 	"Content-Type": "text/plain"
 }
