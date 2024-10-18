@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 # from bitstring import BitArray
 
 load_dotenv()
-url = "https://shazam.p.rapidapi.com/songs/detect"
+url = "https://shazam.p.rapidapi.com/songs/v2/detect"
 querystring = {"timezone":"America/Chicago","locale":"en-US"}
 
 headers = {
@@ -15,23 +15,13 @@ headers = {
 	"Content-Type": "text/plain"
 }
 
-audio = AudioSegment.from_file("audio_ori.mp3")
-print(len(audio))
-# split song into 30 second chunks
-for i in range(0, len(audio), 7000):
-	audio_chunk = audio[i:i+7000]
-	audio_chunk.export("audio.mp3", format="mp3")
+audio = AudioSegment.from_file("audio.mp3", format="mp3").split_to_mono()[0]
 
-	base64_audio = base64.b64encode(open("audio.mp3", "rb").read())
+audio_data = base64.b64encode(audio._data).decode('utf-8')
 
-	response = requests.post(url, data=base64_audio, headers=headers)
+response = requests.request("POST", url, headers=headers, params=querystring, data=audio_data)
+print(response.status_code)
+print(response.json())
 
-	# print(i, end=" ")
-	if response.status_code == 200:
-		if len(response.json()["matches"]) > 0:
-			print(i)
-			print(len(response.json()['matches']))
-			break
-		else:
-			print(response.json())
+
 
