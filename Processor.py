@@ -16,7 +16,7 @@ class Processor():
     def __init__(self, yt_url):
 
         # shazam api variables
-        self.shazamapi_key = "20255aac57msh804c236292b3ec2p12abd6jsna3d7d7386a44"
+        self.shazamapi_key = ""
         self.shazam_endpoint = "https://shazam.p.rapidapi.com/songs/v2/detect"
         self.querystring = {"timezone":"America/Chicago","locale":"en-US"}
         self.headers = {
@@ -34,8 +34,14 @@ class Processor():
         
         yt.streams.filter(only_audio=True).first().stream_to_buffer(self.buffer)
 
-        return self.buffer
+        # return self.buffer
 
+    def video_length(self):
+        self.buffer.seek(0)
+        audio = AudioSegment.from_file(self.buffer, format="mp4").split_to_mono()[0]
+
+        return audio.duration_seconds
+    
     def recognize_audio(self, start_time=0):
         """
         Recognize audio using Shazam API
@@ -49,7 +55,7 @@ class Processor():
 
         return text['track']["title"], text['track']['subtitle']
 
-pro= Processor("https://www.youtube.com/watch?v=so50e5PhVZA")
-track= pro.process_url()
-track_title, artist = pro.recognize_audio()
-print(track_title, artist)
+# pro= Processor("https://www.youtube.com/watch?v=so50e5PhVZA")
+# track= pro.process_url()
+# track_title, artist = pro.recognize_audio()
+# print(track_title, artist)
