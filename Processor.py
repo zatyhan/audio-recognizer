@@ -16,11 +16,11 @@ class Processor():
     def __init__(self, yt_url):
 
         # shazam api variables
-        self.shazamapi_key = ""
+        self.shazamapi_key = "20255aac57msh804c236292b3ec2p12abd6jsna3d7d7386a44"
         self.shazam_endpoint = "https://shazam.p.rapidapi.com/songs/v2/detect"
         self.querystring = {"timezone":"America/Chicago","locale":"en-US"}
         self.headers = {
-            "x-rapidapi-key": "20255aac57msh804c236292b3ec2p12abd6jsna3d7d7386a44",
+            "x-rapidapi-key": self.shazamapi_key,
             "x-rapidapi-host": "shazam.p.rapidapi.com",
             "Content-Type": "text/plain"
         }
