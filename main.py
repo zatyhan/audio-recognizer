@@ -7,8 +7,10 @@ import json
 from pytubefix import YouTube
 from pytubefix.cli import on_progress
 from io import BytesIO
+import spotipy
+from spotipy.oauth2 import SpotifyPKCE
 
-load_dotenv()
+# load_dotenv()
 url = "https://shazam.p.rapidapi.com/songs/v2/detect"
 querystring = {"timezone":"America/Chicago","locale":"en-US"}
 
@@ -19,7 +21,8 @@ headers = {
 }
 
 # audio = AudioSegment.from_file("audio.mp3", format="mp3").split_to_mono()[0]
-yt = YouTube("https://www.youtube.com/watch?v=9hK-BnCjhWs", on_progress_callback=on_progress)
+yt_url = str(input('Enter youtube url:'))
+yt = YouTube(yt_url, on_progress_callback=on_progress)
 
 buffer= BytesIO()
 stream = yt.streams.filter(only_audio=True).first().stream_to_buffer(buffer)
@@ -31,6 +34,17 @@ response = requests.request("POST", url, headers=headers, params=querystring, da
 print(response.status_code)
 print(json.dumps(response.json(), indent=2))
 
+# url = input('Enter youtube URL: ')
+# playlist_name = input('Enter playlist name: ')
 
+# track = Processor(url)
+# processed_track= track.process_url()
 
-
+# playlist= PlaylistMaker(playlist_name)
+# start_time=0
+# while True:
+#     try:
+#         sample_track=  processed_track.recognize_audio(start_time=start_time)
+        
+#     except:
+#         pass
