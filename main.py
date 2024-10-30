@@ -7,11 +7,13 @@ try:
     track = Processor(yt_url)
 except:
     print('Invalid URL')
+    raise SystemExit
 
 try:
     track.process_url()
 except:
     print('Failed to process track')
+    raise SystemExit
 
 playlist= PlaylistMaker(playlist_name)
 start_time=0
@@ -30,23 +32,29 @@ video_length= track.video_length()
 track_ids= set()
 while start_time< video_length:
     try:
-        track_title, artist, album_name=  track.recognize_audio(start_time=start_time)
+        isrc, track_title=  track.recognize_audio(start_time=start_time)
         print("Looking for: ", track_title)
-        track_id, found_title, duration= playlist.lookup(track_name=track_title, artist_name=artist)
+        track_id, found_title, duration= playlist.lookup(isrc)
         print("Track found: ", found_title)
         print('')
         track_ids.add(track_id)
-        print(track_ids)
+        # print(track_ids)
         # playlist.add_to_playlist(track_id)
         start_time+=duration +5
 
-    except:
-        print('Something went wrong')
+    except KeyboardInterrupt:
+        print('The [Ctrl+C] key was pressed. Exiting...')
+        raise SystemExit
+    
+    except Exception as e:
+        print('Track not found '+ e)
+        start_time+=60*2.5
 
     finally:
-        for t in track_ids:
-            playlist.add_to_playlist(t)
+        print('Finding the next title:\n')
         
-        print('Playlist created successfully!') 
+for t in track_ids:
+    playlist.add_to_playlist(t)
+print('Playlist created successfully!') 
         
     
